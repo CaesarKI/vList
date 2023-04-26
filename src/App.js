@@ -24,6 +24,8 @@ const itemRender = (item) => {
   )
 }
 
+console.log('增加测试信息');
+
 function App() {
   return (
     <>
