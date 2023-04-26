@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { findItem } from '../utils/index'
 
 export default function usePropHeightVirtualList(props) {
@@ -20,12 +20,13 @@ export default function usePropHeightVirtualList(props) {
   const startIndex = findItem(
     position.slice(0, Math.ceil(scrollTop / itemHeight) + 1),
     scrollTop
-  )
+  ) 
   const endIndex =startIndex+10
-  const vList = position.slice(startIndex, endIndex)
-  const offset = position[startIndex-1]?.offset || 0
+  const vList = useMemo(()=>data.slice(startIndex, endIndex),[startIndex,endIndex,data])
+  const offset = useMemo(()=>position[startIndex-1]?.offset || 0,[startIndex]) 
 
   const updatePosttion = () => {
+    if (!refs.current.length) return
     const current = refs.current
     current.forEach((node, index) => {
       const i = index + startIndex
@@ -39,7 +40,6 @@ export default function usePropHeightVirtualList(props) {
         offset: item.minHeight + (newPosition[index - 1]?.offset || 0),
       }
     })
-    console.log(newPosition, 'posi')
     setPosition(newPosition)
   }
 
